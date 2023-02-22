@@ -64,17 +64,16 @@ mod-verify:
 test: fmt vet
 	go test ./... -coverprofile cover.out
 
-build: generate fmt vet ## Build manager binary.
+build: fmt vet ## Build manager binary.
 	go build -o bin/manager main.go
 
 lint: ## Run various linters
-	../../hack/verify-lint.sh .
+	hack/verify-lint.sh .
 
 run: fmt vet ## Run a controller from your host.
 	go run ./main.go
 
-## Will be called from Prow-Pipeline; using targets from generic make file
-release: resolve generate verify build-image push-image
+
 
 
 ##@ Dynamic Function Build
