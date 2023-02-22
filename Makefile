@@ -68,7 +68,9 @@ build: fmt vet ## Build manager binary.
 	go build -o bin/manager main.go
 
 lint: ## Run various linters
-	hack/verify-lint.sh .
+	go version
+	golangci-lint version
+	GO111MODULE=on golangci-lint run
 
 run: fmt vet ## Run a controller from your host.
 	go run ./main.go
