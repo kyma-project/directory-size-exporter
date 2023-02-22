@@ -28,5 +28,5 @@ make
 - Run the exporter locally:
 
 ```bash
-make run-local
+make run
 ```
