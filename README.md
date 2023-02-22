@@ -1,39 +1,32 @@
-> **NOTE:** It is a general template that can be used for a project README.md, example README.md, or any other README.md type in all Kyma repositories in the Kyma organization. Not all the sections are mandatory. Use only those that suit your use case but keep the proposed section order.
+# Directory Size Exporter
 
-# {Project Title} (mandatory)
+## Overview
 
-> Modify the title and insert the name of your project. Use Heading 1 (H1).
+The directory size exporter is a typical metrics exporter in the Prometheus format. It is meant to run as a sidecar to an application to watch a specific application file storage and export metrics about that storage. At the moment, it is used only as a sidecar for the `telemetry-fluent-bit` instances to watch the file buffer sizes.
 
-## Overview (mandatory)
+The following configuration options are available:
+- **log-format** - log format parameter for the logger (`json` or `text`)
+- **log-level** - log level parameter for the logger (`debug`, `info`, `warn`, `error`, `fatal`)
+- **storage-path** - the path to the root directory to be observed by the exporter (default `/data/log/flb-storage/`)
+- **metric-name** - the metric name to use for the metric exposure (default `telemetry_fsbuffer_usage_bytes`)
+- **port** - the port under which the metrics will be exposed in the Prometheus format (default `2021`)
+- **interval** - interval in seconds at which the exporter should check the storage (default `30`)
 
-> Provide a description of the project's functionality.
->
-> If it is an example README.md, describe what the example illustrates.
-
-## Prerequisites
-
-> List the requirements to run the project or example.
-
-## Installation
-
-> Explain the steps to install your project. Create an ordered list for each installation task.
->
-> If it is an example README.md, describe how to build, run locally, and deploy the example. Format the example as code blocks and specify the language, highlighting where possible. Explain how you can validate that the example ran successfully. For example, define the expected output or commands to run which check a successful deployment.
->
-> Add subsections (H3) for better readability.
-
-## Usage
-
-> Explain how to use the project. You can create multiple subsections (H3). Include the instructions or provide links to the related documentation.
 
 ## Development
 
-> Add instructions on how to develop the project or example. It must be clear what to do and, for example, how to trigger the tests so that other contributors know how to make their pull requests acceptable. Include the instructions or provide links to related documentation.
+### Available Commands
 
-## Troubleshooting
+For development, use the following commands:
 
-> List potential issues and provide tips on how to avoid or solve them. To structure the content, use the following sections:
->
-> - **Symptom**
-> - **Cause**
-> - **Remedy**
+- Run all tests and validation:
+
+```bash
+make
+```
+
+- Run the exporter locally:
+
+```bash
+make run-local
+```
