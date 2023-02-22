@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"net/http"
+	"time"
 
 	"github.com/kyma-project/directory-size-exporter/internal/exporter"
 
@@ -47,7 +48,12 @@ func main() {
 	exporterLogger.WithContext().Info("Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
-	err = http.ListenAndServe(":"+port, nil)
+	server := &http.Server{
+		Addr:              ":" + port,
+		ReadHeaderTimeout: 1 * time.Second,
+	}
+
+	err = server.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}

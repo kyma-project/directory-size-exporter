@@ -35,7 +35,12 @@ func initExporterAndRecordMetrics(path string) {
 	exporterLogger.WithContext().Info("Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
-	err = http.ListenAndServe(":2021", nil)
+	server := &http.Server{
+		Addr:              ":2021",
+		ReadHeaderTimeout: 1 * time.Second,
+	}
+
+	err = server.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}
