@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/kyma-project/kyma/common/logging v0.0.0-20220805083651-ef77e3aa2cfa
-	github.com/kyma-project/kyma/components/directory-size-exporter v0.0.0-20230221171347-68c56efe2481
 	github.com/prometheus/client_golang v1.12.2
 	github.com/stretchr/testify v1.8.0
 )
