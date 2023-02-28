@@ -67,10 +67,10 @@ mod-verify:
 	GO111MODULE=on go mod verify
 
  ## Run tests.
-test: fmt vet
+test: fmt vet tidy
 	go test ./... -coverprofile cover.out
 
-build: fmt vet ## Build manager binary.
+build: fmt vet tidy ## Build manager binary.
 	go build -o bin/manager main.go
 
 lint: ## Run various linters
@@ -78,7 +78,7 @@ lint: ## Run various linters
 	golangci-lint version
 	GO111MODULE=on golangci-lint run
 
-run: fmt vet ## Run a controller from your host.
+run: fmt vet tidy ## Run a controller from your host.
 	go run ./main.go
 
 
