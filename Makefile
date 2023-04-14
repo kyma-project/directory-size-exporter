@@ -1,7 +1,6 @@
 
 APP_NAME = directory-size-exporter
 APP_PATH = components/$(APP_NAME)
-BUILDPACK = eu.gcr.io/kyma-project/test-infra/buildpack-golang:v20220428-6e81d2c4
 
 PROJECT_DIR := $(shell pwd)
 OS := $(shell uname)
