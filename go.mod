@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/kyma-project/kyma/common/logging v0.0.0-20220805083651-ef77e3aa2cfa
-	github.com/prometheus/client_golang v1.15.0
+	github.com/prometheus/client_golang v1.15.1
 	github.com/stretchr/testify v1.8.2
 )
 
