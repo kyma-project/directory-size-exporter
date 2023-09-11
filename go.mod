@@ -1,6 +1,6 @@
 module github.com/kyma-project/directory-size-exporter
 
-go 1.20
+go 1.21
 
 require (
 	github.com/kyma-project/kyma/common/logging v0.0.0-20230818121453-ec45b56ac92d
