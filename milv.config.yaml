@@ -1,9 +1,0 @@
-timeout: 60
-request-repeats: 5
-files:
-  - path: "./directory-size-exporter/.github/ISSUE_TEMPLATE/security-vulnerability.md"
-    config:
-      internal-links-to-ignore: [ "{CVSS" ]
-      external-links-to-ignore: [ "https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N" ]
-  - path: "./directory-size-exporter/README.md"
-
