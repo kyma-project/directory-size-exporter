@@ -1,0 +1,6 @@
+module-name: telemetry
+protecode: []
+whitesource:
+  language: golang-mod
+  subprojects: false
+  exclude: []
