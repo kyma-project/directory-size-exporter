@@ -1,4 +1,4 @@
-module-name: telemetry
+module-name: telemetry-directory-size-exporter
 protecode: []
 whitesource:
   language: golang-mod
