@@ -1,5 +1,5 @@
 name: Prepare checks
-description: Prepares everything for static code check execution
+description: Prepares everything for code check execution
 
 runs:
   using: "composite"
