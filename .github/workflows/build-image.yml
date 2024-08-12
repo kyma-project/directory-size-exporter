@@ -2,7 +2,7 @@ name: Build Image
 
 on:
   pull_request_target:
-    types: [ opened, edited, synchronize, reopened, ready_for_review ]
+    types: [opened, edited, synchronize, reopened, ready_for_review]
     branches:
       - "main"
   push:
@@ -10,28 +10,14 @@ on:
       - "main"
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Checkout code
-        if: github.event_name == 'push'
-        uses: actions/checkout@v4
-
   build-image:
-    needs: checkout
     uses: kyma-project/test-infra/.github/workflows/image-builder.yml@main # Usage: kyma-project/test-infra/.github/workflows/image-builder.yml@main
     with:
       name: directory-size-exporter
       dockerfile: ./Dockerfile
       context: .
 
-  list-images:
+  Build-Image-Success:
     needs: build-image
     runs-on: ubuntu-latest
     steps:
