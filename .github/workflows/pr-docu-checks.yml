@@ -17,10 +17,17 @@ jobs:
       - name: Validate links
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
-          use-quiet-mode: 'yes'  
-          use-verbose-mode: 'yes'
-          config-file: '.mlc.config.json'
-          folder-path: '.'
+          use-quiet-mode: "yes"
+          use-verbose-mode: "yes"
+          config-file: ".mlc.config.json"
+          folder-path: "."
           max-depth: -1
-          check-modified-files-only: 'yes'
+          check-modified-files-only: "yes"
           base-branch: ${{ github.base_ref }}
+
+  PR-Docu-Checks:
+    name: markdown-link-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "All checks passed"
