@@ -16,16 +16,15 @@ import (
 var (
 	storagePath string
 	metricName  string
+	logFormat   string
+	logLevel    string
+	port        string
+	interval    int
 )
 
 func main() {
-	var logFormat string
-	var logLevel string
-	var port string
-	var interval int
-
-	flag.StringVar(&logFormat, "log-format", "text", "Log format (json or text)")
-	flag.StringVar(&logLevel, "log-level", "info", "Log level (debug, info, warn, error, fatal)")
+	flag.StringVar(&logFormat, "log-format", "json", "Log format (json or text)")
+	flag.StringVar(&logLevel, "log-level", "info", "Log level (debug, info, warn, error)")
 
 	flag.StringVar(&storagePath, "storage-path", "", "Path to the observed data folder")
 	flag.StringVar(&metricName, "metric-name", "", "Metric name used for exporting the folder size")
@@ -37,7 +36,7 @@ func main() {
 		panic(err)
 	}
 
-	logger := createLogger(logFormat, logLevel)
+	logger := createLogger()
 
 	exp := exporter.NewExporter(storagePath, metricName, logger)
 	logger.Info("Exporter is initialized")
@@ -64,11 +63,17 @@ func validateFlags() error {
 	if metricName == "" {
 		return errors.New("--metric-name flag is required")
 	}
+	if logFormat != "json" && logFormat != "text" {
+		return errors.New("--log-format flag should be either 'json' or 'text'")
+	}
+	if logLevel != "debug" && logLevel != "info" && logLevel != "warn" && logLevel != "error" {
+		return errors.New("--log-level flag should be either 'debug', 'info', 'warn' or 'error'")
+	}
 	return nil
 }
 
-func createLogger(logFormat, logLevel string) *slog.Logger {
-	var level slog.Level
+func createLogger() *slog.Logger {
+	level := slog.LevelInfo
 	switch logLevel {
 	case "debug":
 		level = slog.LevelDebug
