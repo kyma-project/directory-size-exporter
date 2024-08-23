@@ -3,28 +3,28 @@ package main
 import (
 	"errors"
 	"flag"
+	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/kyma-project/directory-size-exporter/internal/exporter"
 
-	"github.com/kyma-project/kyma/common/logging/logger"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
 	storagePath string
 	metricName  string
+	logFormat   string
+	logLevel    string
+	port        string
+	interval    int
 )
 
 func main() {
-	var logFormat string
-	var logLevel string
-	var port string
-	var interval int
-
-	flag.StringVar(&logFormat, "log-format", "text", "Log format (json or text)")
-	flag.StringVar(&logLevel, "log-level", "info", "Log level (debug, info, warn, error, fatal)")
+	flag.StringVar(&logFormat, "log-format", "json", "Log format (json or text)")
+	flag.StringVar(&logLevel, "log-level", "info", "Log level (debug, info, warn, error)")
 
 	flag.StringVar(&storagePath, "storage-path", "", "Path to the observed data folder")
 	flag.StringVar(&metricName, "metric-name", "", "Metric name used for exporting the folder size")
@@ -36,16 +36,13 @@ func main() {
 		panic(err)
 	}
 
-	exporterLogger, err := logger.New(logger.Format(logFormat), logger.Level(logLevel))
-	if err != nil {
-		panic(err)
-	}
+	logger := createLogger()
 
-	exp := exporter.NewExporter(storagePath, metricName, exporterLogger)
-	exporterLogger.WithContext().Info("Exporter is initialized")
+	exp := exporter.NewExporter(storagePath, metricName, logger)
+	logger.Info("Exporter is initialized")
 
 	exp.RecordMetrics(interval)
-	exporterLogger.WithContext().Info("Started recording metrics")
+	logger.Info("Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
 	server := &http.Server{
@@ -53,11 +50,10 @@ func main() {
 		ReadHeaderTimeout: 1 * time.Second,
 	}
 
-	err = server.ListenAndServe()
-	if err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
-	exporterLogger.WithContext().Info("Listening on port '" + port + "'")
+	logger.Info("Listening on port '" + port + "'")
 }
 
 func validateFlags() error {
@@ -67,5 +63,37 @@ func validateFlags() error {
 	if metricName == "" {
 		return errors.New("--metric-name flag is required")
 	}
+	if logFormat != "json" && logFormat != "text" {
+		return errors.New("--log-format flag should be either 'json' or 'text'")
+	}
+	if logLevel != "debug" && logLevel != "info" && logLevel != "warn" && logLevel != "error" {
+		return errors.New("--log-level flag should be either 'debug', 'info', 'warn' or 'error'")
+	}
 	return nil
+}
+
+func createLogger() *slog.Logger {
+	level := slog.LevelInfo
+	switch logLevel {
+	case "debug":
+		level = slog.LevelDebug
+	case "info":
+		level = slog.LevelInfo
+	case "warn":
+		level = slog.LevelWarn
+	case "error":
+		level = slog.LevelError
+	}
+
+	var handler slog.Handler
+	handlerOpts := slog.HandlerOptions{
+		Level: level,
+	}
+	if logFormat == "json" {
+		handler = slog.NewJSONHandler(os.Stdout, &handlerOpts)
+	} else {
+		handler = slog.NewTextHandler(os.Stdout, &handlerOpts)
+	}
+
+	return slog.New(handler)
 }

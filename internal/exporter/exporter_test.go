@@ -2,37 +2,23 @@ package exporter
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/kyma-project/kyma/common/logging/logger"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func initExporterAndRecordMetrics(path string) {
-	var logFormat string
-	var logLevel string
-
-	flag.StringVar(&logFormat, "log-format", "text", "Log format (json or text)")
-	flag.StringVar(&logLevel, "log-level", "info", "Log level (debug, info, warn, error, fatal)")
-
-	exporterLogger, err := logger.New(logger.Format(logFormat), logger.Level(logLevel))
-	if err != nil {
-		panic(err)
-	}
-
-	exp := NewExporter(path, "test_metric", exporterLogger)
-	exporterLogger.WithContext().Info("Exporter is initialized")
+	exp := NewExporter(path, "test_metric", slog.Default())
 
 	exp.RecordMetrics(5)
-	exporterLogger.WithContext().Info("Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
 	server := &http.Server{
@@ -40,11 +26,9 @@ func initExporterAndRecordMetrics(path string) {
 		ReadHeaderTimeout: 1 * time.Second,
 	}
 
-	err = server.ListenAndServe()
-	if err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
-	exporterLogger.WithContext().Info("Listening on port '2021'")
 }
 
 func getMetrics(port int) (map[string]string, error) {
