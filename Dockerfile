@@ -1,4 +1,5 @@
-FROM golang:1.22.5-alpine AS build
+FROM europe-docker.pkg.dev/kyma-project/prod/external/library/golang:1.22.5-alpine as build
+
 
 WORKDIR /src/
 COPY main.go go.* /src/
