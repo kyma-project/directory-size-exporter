@@ -1,13 +1,10 @@
-name: PR Code checks
+name: PR Code Checks
 
 on:
   pull_request:
     branches:
       - "main"
       - "release-*"
-    paths-ignore:
-      - "docs/**"
-      - "**.md"
   workflow_dispatch:
 
 env:
