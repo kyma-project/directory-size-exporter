@@ -1,6 +1,6 @@
 module github.com/kyma-project/directory-size-exporter
 
-go 1.21
+go 1.23.1
 
 require (
 	github.com/prometheus/client_golang v1.19.1
