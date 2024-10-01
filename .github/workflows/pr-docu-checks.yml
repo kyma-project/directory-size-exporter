@@ -24,10 +24,3 @@ jobs:
           max-depth: -1
           check-modified-files-only: "yes"
           base-branch: ${{ github.base_ref }}
-
-  PR-Docu-Checks-Success:
-    needs: markdown-link-check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Success
-        run: echo "All checks passed"

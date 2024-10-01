@@ -17,7 +17,7 @@ jobs:
       dockerfile: ./Dockerfile
       context: .
 
-  Build-Image-Success:
+  list-images:
     needs: build-image
     runs-on: ubuntu-latest
     steps:
