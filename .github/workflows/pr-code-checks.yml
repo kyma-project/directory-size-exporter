@@ -33,7 +33,7 @@ jobs:
         uses: "./.github/template/setup-golang"
 
       - name: Run linting
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6.1.0
         with:
           install-mode: binary
           version: latest
