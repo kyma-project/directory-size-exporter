@@ -3,7 +3,7 @@ module github.com/kyma-project/directory-size-exporter
 go 1.23.1
 
 require (
-	github.com/prometheus/client_golang v1.20.4
+	github.com/prometheus/client_golang v1.20.5
 	github.com/stretchr/testify v1.9.0
 )
 
