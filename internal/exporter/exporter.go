@@ -43,6 +43,7 @@ func NewExporter(dataPath string, metricName string, logger *slog.Logger) Export
 func (v *exporter) RecordMetrics(interval int) {
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	quit := make(chan struct{})
+
 	go func() {
 		for {
 			select {
@@ -61,6 +62,7 @@ func (v *exporter) recordingIteration(logPath string) {
 	if err != nil && v.Logger != nil {
 		v.Logger.Error("Error listing directories", slog.Any("err", err))
 	}
+
 	for _, dir := range directories {
 		v.DirectoriesLabelsVector.WithLabelValues(dir.name).Set(float64(dir.size))
 	}
@@ -68,33 +70,42 @@ func (v *exporter) recordingIteration(logPath string) {
 
 func dirSize(path string) (int64, error) {
 	var size int64
+
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
+
 		if info.Mode().IsRegular() {
 			size += info.Size()
 		}
+
 		return err
 	})
+
 	return size, err
 }
 
 func listDirs(path string) ([]directory, error) {
 	directories := make([]directory, 0)
 	files, err := os.ReadDir(path)
+
 	if err != nil {
 		return directories, err
 	}
+
 	for _, file := range files {
 		if !file.IsDir() {
 			continue
 		}
+
 		size, err := dirSize(path + "/" + file.Name())
 		if err != nil {
 			return directories, err
 		}
+
 		directories = append(directories, directory{file.Name(), size})
 	}
+
 	return directories, err
 }

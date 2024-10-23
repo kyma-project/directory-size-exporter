@@ -12,9 +12,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-
 	"github.com/kyma-project/directory-size-exporter/internal/exporter"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 const (
@@ -52,6 +51,7 @@ func run() error {
 	flag.IntVar(&interval, "interval", 30, "Interval to calculate the metric ")
 
 	flag.Parse()
+
 	if err := validateFlags(); err != nil {
 		return fmt.Errorf("invalid flags: %s", err)
 	}
@@ -63,6 +63,7 @@ func run() error {
 	logger.Info("Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
+
 	server := &http.Server{
 		Addr:              ":" + port,
 		ReadHeaderTimeout: readHeaderTimeout,
@@ -100,20 +101,25 @@ func validateFlags() error {
 	if storagePath == "" {
 		return errors.New("--storage-path flag is required")
 	}
+
 	if metricName == "" {
 		return errors.New("--metric-name flag is required")
 	}
+
 	if logFormat != "json" && logFormat != "text" {
 		return errors.New("--log-format flag should be either 'json' or 'text'")
 	}
+
 	if logLevel != "debug" && logLevel != "info" && logLevel != "warn" && logLevel != "error" {
 		return errors.New("--log-level flag should be either 'debug', 'info', 'warn' or 'error'")
 	}
+
 	return nil
 }
 
 func createLogger(logFormat, logLevel string) *slog.Logger {
 	level := slog.LevelInfo
+
 	switch logLevel {
 	case "debug":
 		level = slog.LevelDebug
@@ -126,6 +132,7 @@ func createLogger(logFormat, logLevel string) *slog.Logger {
 	}
 
 	var handler slog.Handler
+
 	handlerOpts := slog.HandlerOptions{
 		Level: level,
 	}

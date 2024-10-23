@@ -21,6 +21,28 @@ endif
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
+SRC_ROOT := $(shell git rev-parse --show-toplevel)
+TOOLS_MOD_DIR    := $(SRC_ROOT)/internal/tools
+TOOLS_MOD_REGEX  := "\s+_\s+\".*\""
+TOOLS_PKG_NAMES  := $(shell grep -E $(TOOLS_MOD_REGEX) < $(TOOLS_MOD_DIR)/tools.go | tr -d " _\"")
+TOOLS_BIN_DIR    := $(SRC_ROOT)/bin
+# Strip off versions (e.g. /v2) from pkg names
+TOOLS_PKG_NAMES_CLEAN  := $(shell grep -E $(TOOLS_MOD_REGEX) < $(TOOLS_MOD_DIR)/tools.go | tr -d " _\"" | sed "s/\/v[0-9].*$$//")
+TOOLS_BIN_NAMES  := $(addprefix $(TOOLS_BIN_DIR)/, $(notdir $(TOOLS_PKG_NAMES_CLEAN)))
+
+.PHONY: install-tools
+install-tools: $(TOOLS_BIN_NAMES)
+
+$(TOOLS_BIN_DIR):
+	mkdir -p $@
+
+$(TOOLS_BIN_NAMES): $(TOOLS_BIN_DIR) $(TOOLS_MOD_DIR)/go.mod
+	cd $(TOOLS_MOD_DIR) && go build -o $@ -trimpath $(filter $(filter %/$(notdir $@),$(TOOLS_PKG_NAMES_CLEAN))%,$(TOOLS_PKG_NAMES))
+
+## Tools
+GOLANGCI_LINT    := $(TOOLS_BIN_DIR)/golangci-lint
+WSL              := $(TOOLS_BIN_DIR)/wsl
+
 ##@ General
 
 # The help target prints out all targets with their descriptions organized
@@ -59,29 +81,27 @@ resolve:
 ensure:
 	@echo "Go modules present in component - omitting."
 
-dep-status:
+dep-status:	
 	@echo "Go modules present in component - omitting."
 
 mod-verify:
 	GO111MODULE=on go mod verify
 
- ## Run tests.
 test: fmt vet tidy
 	go test ./... -coverprofile cover.out
 
 build: fmt vet tidy ## Build manager binary.
 	go build -o bin/manager main.go
 
-lint: ## Run various linters
-	go version
-	golangci-lint version
-	GO111MODULE=on golangci-lint run
+lint: $(GOLANGCI_LINT) ## Check lint issues using `golangci-lint`
+	$(TOOLS_BIN_DIR)/golangci-lint run
+
+lint-fix: $(GOLANGCI_LINT) $(WSL)
+	-$(WSL) --fix ./...
+	$(GOLANGCI_LINT) run --fix
 
 run: fmt vet tidy ## Run a controller from your host.
 	go run ./main.go
-
-
-
 
 ##@ Dynamic Function Build
 $(eval $(call buildpack-cp-ro,resolve))
