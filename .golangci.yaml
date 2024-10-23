@@ -7,19 +7,39 @@ issues:
     - Using the variable on range scope `tc` in function literal
     - Using the variable on range scope `tt` in function literal
 linters:
-  disable-all: true
-  enable:
-    - errcheck
+  enable-all: true
+  disable:
+    # Depreacted linters
+    - gomnd
+    - execinquery
     - exportloopref
-    - gochecknoinits
-    - gofmt
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - misspell
-    - revive
-    - staticcheck
-    - typecheck
-    - unparam
-    - unused
+    # Linters to be enabled after fixing the issues
+    - cyclop
+    - depguard
+    - exhaustruct
+    - forcetypeassert
+    - funlen
+    - gochecknoglobals
+    - goconst
+    - godot
+    - godox
+    - err113
+    - gofumpt
+    - ireturn
+    - lll
+    - maintidx
+    - mirror
+    - nestif
+    - nonamedreturns
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - protogetter
+    - tagliatelle
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - varnamelen
+    - wrapcheck
+    - nlreturn
