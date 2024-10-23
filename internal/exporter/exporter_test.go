@@ -34,7 +34,7 @@ func initExporterAndRecordMetrics(path string) {
 
 func getMetrics(port int) (map[string]string, error) {
 	metrics := map[string]string{}
-	res, err := http.Get("http://localhost:" + fmt.Sprint(port) + "/metrics")
+	res, err := http.Get("http://localhost:" + fmt.Sprint(port) + "/metrics") //nolint:noctx // no need for context here
 
 	if err != nil {
 		return metrics, err

@@ -17,10 +17,11 @@ import (
 )
 
 const (
-	defaultLogFormat  = "json"
-	defaultLogLevel   = "info"
-	readHeaderTimeout = 1 * time.Second
-	shutdownTimeout   = 10 * time.Second
+	defaultLogFormat                = "json"
+	defaultLogLevel                 = "info"
+	defaultMetricCollectionInterval = 30 * time.Second
+	readHeaderTimeout               = 1 * time.Second
+	shutdownTimeout                 = 10 * time.Second
 )
 
 var (
@@ -31,7 +32,7 @@ var (
 	logFormat   string
 	logLevel    string
 	port        string
-	interval    int
+	interval    time.Duration
 )
 
 func main() {
@@ -48,12 +49,12 @@ func run() error {
 	flag.StringVar(&storagePath, "storage-path", "", "Path to the observed data folder")
 	flag.StringVar(&metricName, "metric-name", "", "Metric name used for exporting the folder size")
 	flag.StringVar(&port, "port", "2021", "Port for exposing the metrics")
-	flag.IntVar(&interval, "interval", 30, "Interval to calculate the metric ")
+	flag.DurationVar(&interval, "interval", defaultMetricCollectionInterval, "Interval to calculate the metric ")
 
 	flag.Parse()
 
 	if err := validateFlags(); err != nil {
-		return fmt.Errorf("invalid flags: %s", err)
+		return fmt.Errorf("invalid flags: %w", err)
 	}
 
 	logger = createLogger(logFormat, logLevel)

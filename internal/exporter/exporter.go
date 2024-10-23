@@ -11,7 +11,7 @@ import (
 )
 
 type Exporter interface {
-	RecordMetrics(interval int)
+	RecordMetrics(interval time.Duration)
 }
 
 type exporter struct {
@@ -40,8 +40,8 @@ func NewExporter(dataPath string, metricName string, logger *slog.Logger) Export
 	}
 }
 
-func (v *exporter) RecordMetrics(interval int) {
-	ticker := time.NewTicker(time.Duration(interval) * time.Second)
+func (v *exporter) RecordMetrics(interval time.Duration) {
+	ticker := time.NewTicker(interval)
 	quit := make(chan struct{})
 
 	go func() {
