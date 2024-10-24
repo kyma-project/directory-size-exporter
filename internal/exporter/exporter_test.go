@@ -21,6 +21,7 @@ func initExporterAndRecordMetrics(path string) {
 	exp.RecordMetrics(5)
 
 	http.Handle("/metrics", promhttp.Handler())
+
 	server := &http.Server{
 		Addr:              ":2021",
 		ReadHeaderTimeout: 1 * time.Second,
@@ -33,11 +34,14 @@ func initExporterAndRecordMetrics(path string) {
 
 func getMetrics(port int) (map[string]string, error) {
 	metrics := map[string]string{}
-	res, err := http.Get("http://localhost:" + fmt.Sprint(port) + "/metrics")
+	res, err := http.Get("http://localhost:" + fmt.Sprint(port) + "/metrics") //nolint:noctx // no need for context here
+
 	if err != nil {
 		return metrics, err
 	}
+
 	defer res.Body.Close()
+
 	scanner := bufio.NewScanner(res.Body)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -52,11 +56,13 @@ func getMetrics(port int) (map[string]string, error) {
 
 		metrics[lineMetrics[0]] = lineMetrics[1]
 	}
+
 	return metrics, err
 }
 
 func prepareMockDirectories(testDir string) (string, error) {
 	dirPath := testDir + "/test-data"
+
 	err := os.Mkdir(dirPath, 0700)
 	if err != nil {
 		return "", err
@@ -117,6 +123,7 @@ func TestListDir(t *testing.T) {
 	assert.NoError(t, err)
 
 	isTrue := (len(directories) == len(expectedDirectories))
+
 	for i, dir := range directories {
 		if dir != expectedDirectories[i] {
 			isTrue = false
@@ -154,6 +161,7 @@ func TestRecordMetric(t *testing.T) {
 
 	directories, err := os.ReadDir(dirPath)
 	require.NoError(t, err)
+
 	emitterMetricInitialValue, prs := initialMetrics["test_metric{directory=\""+directories[0].Name()+"\"}"]
 	require.True(t, prs)
 
@@ -163,6 +171,7 @@ func TestRecordMetric(t *testing.T) {
 
 	metrics, err := getMetrics(2021)
 	require.NoError(t, err)
+
 	emitterMetricValue, prs := metrics["test_metric{directory=\""+directories[0].Name()+"\"}"]
 	require.True(t, prs)
 
