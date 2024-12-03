@@ -2,6 +2,8 @@
 
 # Directory Size Exporter
 
+Test PR for implementing merge queues
+
 ## Overview
 
 The directory size exporter is a typical metrics exporter in the Prometheus format. It is meant to run as a sidecar to an application to watch a specific application file storage and export metrics about that storage. At the moment, it is used only as a sidecar for the `telemetry-fluent-bit` instances to watch the file buffer sizes.
