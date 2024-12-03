@@ -1,6 +1,7 @@
 name: PR Github Checks
 
 on:
+  merge_group:
   pull_request_target:
     branches:
       - "main"
