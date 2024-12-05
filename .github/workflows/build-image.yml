@@ -17,6 +17,7 @@ jobs:
       name: directory-size-exporter
       dockerfile: ./Dockerfile
       context: .
+      tags: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
 
   list-images:
     needs: build-image
