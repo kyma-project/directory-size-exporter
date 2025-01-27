@@ -1,6 +1,12 @@
 module-name: telemetry-directory-size-exporter
+kind: kyma
 protecode: []
 whitesource:
   language: golang-mod
   subprojects: false
-  exclude: []
+  exclude:
+      - '**/*_test.go'
+checkmarx-one:
+    preset: go-default
+    exclude:
+        - '**/*_test.go'
