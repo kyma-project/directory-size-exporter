@@ -3,7 +3,6 @@ kind: kyma
 protecode: []
 whitesource:
   language: golang-mod
-  subprojects: false
   exclude:
       - '**/*_test.go'
 checkmarx-one:
