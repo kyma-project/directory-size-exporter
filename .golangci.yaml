@@ -9,16 +9,15 @@ issues:
 linters:
   enable-all: true
   disable:
-    # Depreacted linters
-    - gomnd
-    - execinquery
-    - exportloopref
+    # Deprecated linters
+    - tenv
     # Linters to be enabled after fixing the issues
     - cyclop
     - depguard
     - exhaustruct
     - forcetypeassert
     - funlen
+    - ginkgolinter
     - gochecknoglobals
     - goconst
     - godot
