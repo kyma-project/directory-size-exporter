@@ -1,6 +1,6 @@
 module github.com/kyma-project/directory-size-exporter/internal/tools
 
-go 1.23.6
+go 1.24.0
 
 require (
 	github.com/bombsimon/wsl/v4 v4.5.0
