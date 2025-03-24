@@ -1,19 +1,12 @@
+version: "2"
 run:
   modules-download-mode: readonly
-  timeout: 10m
-issues:
-  exclude:
-    # Check this issue for more info: https://github.com/kyoh86/scopelint/issues/4
-    - Using the variable on range scope `tc` in function literal
-    - Using the variable on range scope `tt` in function literal
 linters:
-  enable-all: true
+  default: all
   disable:
-    # Deprecated linters
-    - tenv
-    # Linters to be enabled after fixing the issues
     - cyclop
     - depguard
+    - err113
     - exhaustruct
     - forcetypeassert
     - funlen
@@ -22,13 +15,12 @@ linters:
     - goconst
     - godot
     - godox
-    - err113
-    - gofumpt
     - ireturn
     - lll
     - maintidx
     - mirror
     - nestif
+    - nlreturn
     - nonamedreturns
     - paralleltest
     - perfsprint
@@ -41,4 +33,30 @@ linters:
     - tparallel
     - varnamelen
     - wrapcheck
-    - nlreturn
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: (.+)\.go$
+        text: Using the variable on range scope `tc` in function literal
+      - path: (.+)\.go$
+        text: Using the variable on range scope `tt` in function literal
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
