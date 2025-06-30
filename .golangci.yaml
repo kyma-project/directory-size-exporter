@@ -4,6 +4,7 @@ run:
 linters:
   default: all
   disable:
+    - wsl
     - cyclop
     - depguard
     - err113
@@ -11,6 +12,7 @@ linters:
     - forcetypeassert
     - funlen
     - ginkgolinter
+    - noinlineerr
     - gochecknoglobals
     - goconst
     - godot
@@ -33,6 +35,11 @@ linters:
     - tparallel
     - varnamelen
     - wrapcheck
+  settings:
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2 
   exclusions:
     generated: lax
     presets:
