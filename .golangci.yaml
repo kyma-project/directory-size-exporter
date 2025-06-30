@@ -12,7 +12,6 @@ linters:
     - forcetypeassert
     - funlen
     - ginkgolinter
-    - noinlineerr
     - gochecknoglobals
     - goconst
     - godot
@@ -23,6 +22,7 @@ linters:
     - mirror
     - nestif
     - nlreturn
+    - noinlineerr
     - nonamedreturns
     - paralleltest
     - perfsprint
