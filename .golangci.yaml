@@ -4,7 +4,6 @@ run:
 linters:
   default: all
   disable:
-    - wsl
     - cyclop
     - depguard
     - err113
@@ -35,6 +34,7 @@ linters:
     - tparallel
     - varnamelen
     - wrapcheck
+    - wsl
   settings:
     wsl_v5:
       allow-first-in-block: true
