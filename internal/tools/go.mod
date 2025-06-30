@@ -3,7 +3,7 @@ module github.com/kyma-project/directory-size-exporter/internal/tools
 go 1.24.4
 
 require (
-	github.com/bombsimon/wsl/v4 v4.7.0
+	github.com/bombsimon/wsl/v5 v5.0.0
 	github.com/golangci/golangci-lint/v2 v2.2.1
 )
 
@@ -34,7 +34,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bkielbasa/cyclop v1.2.3 // indirect
 	github.com/blizzy78/varnamelen v0.8.0 // indirect
-	github.com/bombsimon/wsl/v5 v5.0.0 // indirect
+	github.com/bombsimon/wsl/v4 v4.7.0 // indirect
 	github.com/breml/bidichk v0.3.3 // indirect
 	github.com/breml/errchkjson v0.4.1 // indirect
 	github.com/butuzov/ireturn v0.4.0 // indirect
