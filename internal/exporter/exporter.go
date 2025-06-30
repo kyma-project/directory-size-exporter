@@ -88,8 +88,8 @@ func dirSize(path string) (int64, error) {
 
 func listDirs(path string) ([]directory, error) {
 	directories := make([]directory, 0)
-	files, err := os.ReadDir(path)
 
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return directories, err
 	}
