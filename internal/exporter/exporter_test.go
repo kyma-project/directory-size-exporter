@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -15,10 +16,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func initExporterAndRecordMetrics(path string) {
+func initExporterAndRecordMetrics(ctx context.Context, path string) {
 	exp := NewExporter(path, "test_metric", slog.Default())
 
-	exp.RecordMetrics(5)
+	exp.RecordMetrics(ctx, 5)
 
 	http.Handle("/metrics", promhttp.Handler())
 
@@ -153,7 +154,7 @@ func TestRecordMetric(t *testing.T) {
 	dirPath, err := prepareMockDirectories(t.TempDir())
 	require.NoError(t, err)
 
-	go initExporterAndRecordMetrics(dirPath)
+	go initExporterAndRecordMetrics(t.Context(), dirPath)
 
 	time.Sleep(10 * time.Second)
 

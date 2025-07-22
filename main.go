@@ -62,7 +62,7 @@ func run() error {
 	logger = createLogger(logFormat, logLevel)
 	exp := exporter.NewExporter(storagePath, metricName, logger)
 
-	exp.RecordMetrics(interval)
+	exp.RecordMetrics(ctx, interval)
 	logger.InfoContext(ctx, "Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
