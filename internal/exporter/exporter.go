@@ -60,7 +60,7 @@ func (v *exporter) RecordMetrics(interval time.Duration) {
 func (v *exporter) recordingIteration(logPath string) {
 	directories, err := listDirs(logPath)
 	if err != nil && v.Logger != nil {
-		v.Logger.Error("Error listing directories", slog.Any("err", err))
+		v.Logger.Error("Error listing directories", slog.Any("err", err)) //nolint:noctx // no need for context here
 	}
 
 	for _, dir := range directories {

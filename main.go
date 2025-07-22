@@ -57,11 +57,13 @@ func run() error {
 		return fmt.Errorf("invalid flags: %w", err)
 	}
 
+	ctx := context.Background()
+
 	logger = createLogger(logFormat, logLevel)
 	exp := exporter.NewExporter(storagePath, metricName, logger)
 
 	exp.RecordMetrics(interval)
-	logger.Info("Started recording metrics")
+	logger.InfoContext(ctx, "Started recording metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
 
@@ -71,29 +73,29 @@ func run() error {
 	}
 
 	go func() {
-		logger.Info("Listening on port '" + port + "'")
+		logger.InfoContext(ctx, "Listening on port '"+port+"'")
 
 		// When Shutdown is called, ListenAndServe will return http.ErrServerClosed, do not log it as an error
 		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			logger.Error("HTTP server error: %v", slog.Any("err", err))
+			logger.ErrorContext(ctx, "HTTP server error: %v", slog.Any("err", err))
 		}
 
-		logger.Info("Stopped serving new connections.")
+		logger.InfoContext(ctx, "Stopped serving new connections.")
 	}()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
 
-	shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), shutdownTimeout)
+	shutdownCtx, shutdownRelease := context.WithTimeout(ctx, shutdownTimeout)
 	defer shutdownRelease()
 
 	if err := server.Shutdown(shutdownCtx); err != nil {
-		logger.Error("HTTP shutdown error: %v", slog.Any("err", err))
+		logger.ErrorContext(shutdownCtx, "HTTP shutdown error: %v", slog.Any("err", err))
 		return err
 	}
 
-	logger.Info("Graceful shutdown complete.")
+	logger.InfoContext(shutdownCtx, "Graceful shutdown complete.")
 
 	return nil
 }
