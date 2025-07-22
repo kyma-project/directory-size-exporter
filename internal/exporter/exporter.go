@@ -1,6 +1,7 @@
 package exporter
 
 import (
+	"context"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -11,7 +12,7 @@ import (
 )
 
 type Exporter interface {
-	RecordMetrics(interval time.Duration)
+	RecordMetrics(ctx context.Context, interval time.Duration)
 }
 
 type exporter struct {
@@ -40,7 +41,7 @@ func NewExporter(dataPath string, metricName string, logger *slog.Logger) Export
 	}
 }
 
-func (v *exporter) RecordMetrics(interval time.Duration) {
+func (v *exporter) RecordMetrics(ctx context.Context, interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	quit := make(chan struct{})
 
@@ -48,7 +49,7 @@ func (v *exporter) RecordMetrics(interval time.Duration) {
 		for {
 			select {
 			case <-ticker.C:
-				v.recordingIteration(v.LogPath)
+				v.recordingIteration(ctx, v.LogPath)
 			case <-quit:
 				ticker.Stop()
 				return
@@ -57,10 +58,10 @@ func (v *exporter) RecordMetrics(interval time.Duration) {
 	}()
 }
 
-func (v *exporter) recordingIteration(logPath string) {
+func (v *exporter) recordingIteration(ctx context.Context, logPath string) {
 	directories, err := listDirs(logPath)
 	if err != nil && v.Logger != nil {
-		v.Logger.Error("Error listing directories", slog.Any("err", err))
+		v.Logger.ErrorContext(ctx, "Error listing directories", slog.Any("err", err))
 	}
 
 	for _, dir := range directories {
