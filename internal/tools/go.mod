@@ -3,7 +3,7 @@ module github.com/kyma-project/directory-size-exporter/internal/tools
 go 1.24.5
 
 require (
-	github.com/bombsimon/wsl/v5 v5.1.0
+	github.com/bombsimon/wsl/v5 v5.1.1
 	github.com/golangci/golangci-lint/v2 v2.3.0
 )
 
